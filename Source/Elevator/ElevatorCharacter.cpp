@@ -127,3 +127,26 @@ void AElevatorCharacter::MoveRight(float Value)
 		AddMovementInput(Direction, Value);
 	}
 }
+
+void AElevatorCharacter::Laser()
+{
+	FHitResult OutHit;
+	FVector Start = GetActorLocation();
+	Start.Z += 70.0f;
+	FVector ForwardVector = GetActorForwardVector();
+	FVector End = (ForwardVector * 1000) + Start;
+
+	FCollisionQueryParams Params;
+	Params.AddIgnoredActor(this);
+
+	if (GetWorld()->LineTraceSingleByChannel(OutHit, Start, End, ECollisionChannel::ECC_Visibility, Params, FCollisionResponseParams()))
+	{
+
+		UE_LOG(LogTemp, Error, TEXT("Its actor  : %s"), *OutHit.GetActor()->GetName());
+		OutHit.GetActor()->Destroy();
+	}
+
+	DrawDebugLine(GetWorld(), Start, End, FColor::Red, false, 1, 0, 5);
+
+
+}
